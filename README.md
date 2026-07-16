@@ -1,200 +1,292 @@
-# RAG Question Answering System
+# RAG-Based Question Answering System using FLAN-T5
 
-A Retrieval-Augmented Generation (RAG) project that answers questions from PDF documents using semantic search and Large Language Models (LLMs).
+> A Retrieval-Augmented Generation (RAG) system that retrieves relevant information from the ISO/IEC 27001:2022 document and generates document-grounded answers using Google's FLAN-T5 model.
 
-The project implements a complete RAG workflow including document loading, text extraction, chunking, embedding generation, vector database indexing, semantic retrieval, and answer generation.
+---
+
+# Table of Contents
+
+- Project Overview
+- Problem Statement
+- Project Objectives
+- Knowledge Source
+- Technologies Used
+- System Architecture
+- Project Workflow
+- RAG Pipeline
+- Embedding Model
+- Vector Database
+- Retrieval Process
+- Language Model
+- Prompt Construction
+- Question Categories
+- Project Structure
+- Installation
+- How to Run
+- Results
+- Strengths
+- Limitations
+- Future Improvements
+- Conclusion
+- Author
 
 ---
 
 # Project Overview
 
-This project demonstrates how Retrieval-Augmented Generation (RAG) enhances question answering by retrieving the most relevant document chunks before generating a response.
+This project implements a complete Retrieval-Augmented Generation (RAG) pipeline for document-based question answering.
 
-Instead of relying solely on the language model, the system retrieves relevant information from the provided document, significantly reducing hallucinations and improving answer reliability.
+Instead of relying only on the language model's internal knowledge, the system retrieves the most relevant information from a PDF document before generating an answer.
 
----
+The knowledge source used in this project is:
 
-# Document Used
+**ISO/IEC 27001:2022 – Information Security Management Systems Requirements**
 
-**ISO/IEC 27001:2022**
+The pipeline performs the following tasks:
 
-Information Security Management Systems (ISMS)
-
-The document serves as the knowledge source for retrieval and question answering.
-
----
-
-# Features
-
-- PDF document loading
-- Text extraction
-- Text chunking
-- Semantic embeddings
-- ChromaDB vector database
-- Semantic similarity search
-- Context-aware answer generation
-- Retrieval distance visualization
-- Hallucination reduction
+- Load a PDF document
+- Extract document text
+- Clean the extracted text
+- Split the text into overlapping chunks
+- Generate sentence embeddings
+- Store embeddings inside ChromaDB
+- Retrieve the most relevant chunks
+- Generate the final answer using FLAN-T5
 
 ---
 
-# Project Workflow
+# Problem Statement
 
-```
-PDF Document
-      │
-      ▼
-Text Extraction
-      │
-      ▼
-Text Chunking
-      │
-      ▼
-Embedding Generation
-      │
-      ▼
-ChromaDB Vector Database
-      │
-      ▼
-Semantic Retrieval
-      │
-      ▼
-Context Construction
-      │
-      ▼
-FLAN-T5
-      │
-      ▼
-Generated Answer
-```
+Large Language Models may produce unsupported answers when they do not have access to external knowledge.
+
+Retrieval-Augmented Generation solves this issue by retrieving relevant information from a document before answer generation, reducing hallucination and improving answer quality.
+
+---
+
+# Project Objectives
+
+- Build a complete RAG pipeline.
+- Retrieve document-based information.
+- Reduce hallucination.
+- Generate accurate answers using retrieved context.
+- Demonstrate semantic retrieval using embeddings.
+
+---
+
+# Knowledge Source
+
+- ISO/IEC 27001:2022 PDF
 
 ---
 
 # Technologies Used
 
 - Python
+- Jupyter Notebook
+- PyPDF
 - Sentence Transformers
 - ChromaDB
-- Transformers
+- Hugging Face Transformers
 - FLAN-T5
-- PyTorch
-- PyPDF2
 - NumPy
-- Pandas
-- Matplotlib
 
 ---
 
-# RAG Components
+# System Architecture
 
-| Component | Model |
-|-----------|----------------------|
-| Embedding Model | all-MiniLM-L6-v2 |
-| Vector Database | ChromaDB |
-| Language Model | google/flan-t5-base |
+```text
+PDF
+ ↓
+Text Extraction
+ ↓
+Chunking
+ ↓
+Embeddings
+ ↓
+ChromaDB
+ ↓
+Similarity Search
+ ↓
+Retrieved Context
+ ↓
+FLAN-T5
+ ↓
+Generated Answer
+```
 
 ---
 
-# Chunking Strategy
+# RAG Pipeline
 
-The document is divided into overlapping text chunks before generating embeddings.
+1. Load PDF
+2. Extract Text
+3. Clean Text
+4. Chunk Text
+5. Generate Embeddings
+6. Store in ChromaDB
+7. Retrieve Top-3 Chunks
+8. Generate Answer
 
-Current configuration:
+---
 
-- Chunk Size: **500 characters**
-- Chunk Overlap: **16 characters**
+# Embedding Model
 
-This approach balances semantic context while improving retrieval precision.
+```
+all-MiniLM-L6-v2
+```
+
+Embedding Dimension:
+
+```
+384
+```
+
+---
+
+# Vector Database
+
+The project stores document embeddings using **ChromaDB**.
+
+For each question:
+
+- Convert question to embedding.
+- Perform similarity search.
+- Retrieve the three most relevant chunks.
+- Send retrieved context to FLAN-T5.
 
 ---
 
 # Retrieval Process
 
-The user question is converted into an embedding vector.
-
-The system then performs semantic similarity search inside ChromaDB to retrieve the three most relevant document chunks.
-
-Those retrieved chunks are combined into a context prompt before being passed to the FLAN-T5 language model.
+```python
+results = collection.query(
+    query_texts=[question],
+    n_results=3
+)
+```
 
 ---
 
-# Evaluation
+# Language Model
 
-The system was evaluated using ten different questions covering multiple scenarios.
+```
+google/flan-t5-base
+```
 
-Evaluation categories included:
+The retrieved context and the user question are combined into a prompt before generation.
 
-- Available Information
+---
+
+# Prompt Construction
+
+```text
+Context:
+...
+
+Question:
+...
+
+Answer:
+```
+
+---
+
+# Question Categories
+
+The project evaluates three types of questions:
+
+- Available Questions
 - Detailed Questions
-- Unavailable Information
+- Unavailable Questions
 
-The retrieval process was also evaluated using semantic distance scores for every retrieved chunk.
+---
+
+# Project Structure
+
+```text
+RagProject/
+│
+├── RagProject1_.ipynb
+├── ISO_IEC_27001_2022.pdf
+├── README.md
+└── requirements.txt
+```
+
+---
+
+# Installation
+
+```bash
+git clone https://github.com/Layanmousa/Rag-Project.git
+
+cd Rag-Project
+
+pip install pypdf sentence-transformers chromadb transformers torch sentencepiece
+```
+
+---
+
+# How to Run
+
+1. Open the notebook.
+2. Run all cells in order.
+3. Enter a question.
+4. Retrieve the most relevant chunks.
+5. Generate the final answer.
 
 ---
 
 # Results
 
-The implemented RAG pipeline successfully retrieves semantically relevant document chunks before generating responses.
+The project successfully:
 
-The system demonstrated:
-
-- Accurate retrieval for document-based questions.
-- Context-aware answer generation.
-- Reduced hallucination by grounding responses in the retrieved document.
-- Ability to identify when requested information is unavailable.
-
-The project also highlights how retrieval quality directly affects answer quality, making chunking strategy and embedding selection essential components of a successful RAG system.
+- Extracted PDF text.
+- Created semantic embeddings.
+- Stored vectors in ChromaDB.
+- Retrieved relevant document sections.
+- Generated document-based answers using FLAN-T5.
 
 ---
 
-# Skills Demonstrated
+# Strengths
 
-- Retrieval-Augmented Generation (RAG)
-- Semantic Search
-- Vector Databases
-- Embedding Models
-- Prompt Engineering
-- Large Language Models
-- Natural Language Processing
-- Python Development
+- End-to-end RAG pipeline.
+- Semantic retrieval.
+- Modular implementation.
+- Easy to extend.
+- Suitable for document question answering.
+
+---
+
+# Limitations
+
+- Fixed-size chunking.
+- CPU inference can be slow.
+- Performance depends on retrieval quality.
 
 ---
 
 # Future Improvements
 
-Potential enhancements include:
-
-- Adaptive Chunking
 - Semantic Chunking
-- Hybrid Search (BM25 + Embeddings)
-- Re-ranking Models
-- OCR Integration
-- Multi-document Retrieval
-- Larger Open-source Language Models
-- Agentic RAG
+- Late Chunking
+- Hybrid Search
+- Better Prompt Engineering
+- Streamlit Interface
+- FastAPI Deployment
+- Source Citation
+- Retrieval Evaluation Metrics
 
 ---
 
-# Repository Structure
+# Conclusion
 
-```text
-RagProject/
-│
-├── RagProject.ipynb
-├── README.md
-├── ISO27001.pdf
-├── chroma_db/
-└── requirements.txt
-```
+This project demonstrates how Retrieval-Augmented Generation improves document-based question answering by combining semantic retrieval with a pretrained language model.
+
+The retrieved document context helps the model generate more reliable and grounded answers than relying solely on pretrained knowledge.
 
 ---
 
 # Author
 
 **Layan Mousa**
-
-
-
-GitHub:
-https://github.com/Layanmousa
-
