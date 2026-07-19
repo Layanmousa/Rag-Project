@@ -1,0 +1,11 @@
+Test,Question,Best Distance,Retrieved Pages,Retrieved Correct Context,Reviewer Notes
+1,What does ISO/IEC 27001 specify?,0.2611466646194458,"[4, 4, 26]",No,Retrieved the Foreword instead of the Scope/Introduction.
+2,What is the title of Clause 4?,0.7733800411224365,"[7, 17, 8]",No,Failed to retrieve the correct Clause 4 heading.
+3,What is the title of Clause 5?,0.7619800567626953,"[3, 8, 7]",No,Retrieved unrelated sections instead of Clause 5.
+4,What is the title of Clause 10?,0.783981204032898,"[3, 17, 16]",No,Failed to retrieve the correct Clause 10 title.
+5,What document contains the terms and definitions?,0.5570425987243652,"[7, 13, 13]",Yes,Correctly identified ISO/IEC 27000.
+6,Summarize the purpose of the information security management system.,0.2531494498252868,"[8, 5, 9]",Partial,Retrieved relevant content but focused on Leadership instead of the ISMS purpose.
+7,Explain the purpose of internal audits.,0.3972266316413879,"[15, 14, 7]",Yes,Correct answer retrieved from the appropriate section.
+8,What should an organization do when a nonconformity occurs?,0.4725405573844909,"[16, 16, 17]",Yes,Correct corrective action process was retrieved.
+9,Who created ISO/IEC 27001?,0.3265257477760315,"[4, 26, 4]",Partial,Correctly recognized that the information is unavailable in the document.
+10,What is the certification cost of ISO/IEC 27001?,0.3609579801559448,"[26, 4, 4]",No,Hallucinated the certification cost by misinterpreting document metadata.
